@@ -1048,7 +1048,7 @@
                     $(this).show()
                 });
 
-                var jobCount = $('.results tbody tr[display!="none"]').length;
+                var jobCount = $('.results tbody tr').not(function() {return this.style['display'] == 'none';}).length
                 if(jobCount < '34'){
                     $('.counter').text(jobCount + (jobCount != 1 ? ' items' : ' item' ));
                 } else {
