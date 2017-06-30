@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+        <link rel="stylesheet" type="text/css" href="bootstrap.min.css"/>
+        <style>
+            :root {
+                --lgreen: #E3EBE0;
+                --lgreen-h: #C7D7C1;
+                --dgreen: #ABC3A3;
+                --dgreen-h: #8FAF84;
+
+                --green-text: #385030;
+
+                --lblue: #E3EEF0;
+                --lblue-h: #C8DDE2;
+                --dblue: #ADCCD3;
+                --dblue-h: #91BBC5;
+
+                --ltawn: #FFF5F0;
+                --ltawn-h: #FFEBE2;
+                --dtawn: #FFE2D4;
+                --dtawn-h: #FFD8C6;
+
+                --lhazel: #EDF3E8;
+                --lhazel-h: #DCE8D2;
+                --dhazel: #CBDCBB;
+                --dhazel-h: #BAD1A5;
+            }
+
+            body{
+              padding:20px 20px;
+            }
+
+            .results tr[visible='false'],
+            .no-result{
+              display:none;
+            }
+            .search {
+                max-width: 500px;
+                margin: auto;
+            }
+/*            .results tr[visible='true']{
+              display:table-row;
+            }*/
+
+            .counter{
+              padding:4px;
+              margin:auto;
+              color:#ccc;
+            }
+            table {
+                border-collapse: collapse;
+                border: 2px black solid;
+                font: 12px sans-serif;
+            }
+            .table{
+                margin: auto;
+                width: 1210px;
+                padding:0px;
+
+            }
+
+            table.fixed { table-layout:fixed; }
+            table.fixed { overflow: hidden; }
+
+/*            tr.highlight {
+                background-color:#d9d9d9;
+            }*/
+            tr, td, th {
+                transition: background-color .5s;
+            }
+/*            tr:not(.select-col):not(.aa-string).highlight { 
+                background-color:#d9d9d9;
+            }
+            tr:not(.select-col):not(.aa-string).highlight>td.first-col {
+                background-color:#cccccc;
+            }
+            tr:not(.select-col)>td.highlight {
+                background-color:#d9d9d9;
+            }*/
+
+/*            tr.select-col{
+                background-color: #ffffb3;
+            }*/
+            tr.select-col>td.select-col{
+                vertical-align:middle;
+                text-align:center;
+                font-size: 16pt;
+                -webkit-user-select: none;
+                -khtml-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                -o-user-select: none;
+                user-select: none;
+                cursor: default;
+            }
+
+            tr.select-col.aa-string {
+                color: var(--green-text)
+            }
+            tr.select-col.highlight {
+                transition: text-shadow .5s;
+                font-weight: bold;
+
+            }
+            tr:not(.top-row):not(.select-col)>th.highlight{
+                background-color:#cccccc;
+            }
+
+
+            tr.select-col.highlight {
+            text-shadow:-1px -1px 0 var(--ltawn-h), 1px -1px 0 var(--ltawn-h), -1px 1px 0 var(--ltawn-h), 1px 1px 0 var(--ltawn-h);
+            }
+
+            tr:not(.top-row):not(.select-col) {
+            background-color:var(--ltawn);
+            }
+
+            tr:not(.top-row):not(.select-col)>td.first-col {
+            background-color:var(--dtawn);
+            }
+
+            tr:not(.top-row):not(.select-col).highlight,tr:not(.top-row):not(.select-col)>td.highlight {
+            background-color:var(--ltawn-h);
+            }
+
+            tr:not(.top-row):not(.select-col).highlight>td.first-col,tr:not(.top-row):not(.select-col)>td.first-col.highlight {
+            background-color:var(--dtawn-h);
+            }
+
+
+            tr.select-col.aa-string.highlight {
+            text-shadow:-1px -1px 0 var(--lgreen-h), 1px -1px 0 var(--lgreen-h), -1px 1px 0 var(--lgreen-h), 1px 1px 0 var(--lgreen-h);
+            }
+
+            tr:not(.top-row):not(.select-col).aa-string {
+            background-color:var(--lgreen);
+            }
+
+            tr:not(.top-row):not(.select-col).aa-string>td.first-col {
+            background-color:var(--dgreen);
+            }
+
+            tr:not(.top-row):not(.select-col).aa-string.highlight,tr:not(.top-row):not(.select-col).aa-string>td.highlight {
+            background-color:var(--lgreen-h);
+            }
+
+            tr:not(.top-row):not(.select-col).aa-string.highlight>td.first-col,tr:not(.top-row):not(.select-col).aa-string>td.first-col.highlight {
+            background-color:var(--dgreen-h);
+            }
+
+
+
+            tr.select-col.gl-code.highlight {
+            text-shadow:-1px -1px 0 var(--lblue-h), 1px -1px 0 var(--lblue-h), -1px 1px 0 var(--lblue-h), 1px 1px 0 var(--lblue-h);
+            }
+
+            tr:not(.top-row):not(.select-col).gl-code {
+            background-color:var(--lblue);
+            }
+
+            tr:not(.top-row):not(.select-col).gl-code>td.first-col {
+            background-color:var(--dblue);
+            }
+
+            tr:not(.top-row):not(.select-col).gl-code.highlight,tr:not(.top-row):not(.select-col).gl-code>td.highlight {
+            background-color:var(--lblue-h);
+            }
+
+            tr:not(.top-row):not(.select-col).gl-code.highlight>td.first-col,tr:not(.top-row):not(.select-col).gl-code>td.first-col.highlight {
+            background-color:var(--dblue-h);
+            }
+
+
+            /*  
+            td.first-col{
+                min-width:100px;
+            } 
+
+            tr>td.active {
+                background-color:#bcbcbc;
+                transition:background-color .4s;
+            } .active-title {
+                background-color:#9e9e9e;
+                transition:background-color .4s;
+            } .inactive {
+
+            }*/
+
+            th.header{
+                text-align: center;
+                -webkit-user-select: none;
+                -khtml-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                -o-user-select: none;
+                user-select: none;
+                cursor: default;
+            }
+            /*tbody>tr:hover{background-color: #e6e6e6}*/
+
+
+            
+            /*th:hover{background-color: #d9d9d9}*/
+        </style>
+    </head>
+    <body>
+        <script src="http://d3js.org/d3.v3.min.js"></script>
+        <!-- <script src="d3.min.js?v=3.2.8"></script> -->
+        <div>
+            <div class="form-group">
+                <input type="text" class="search form-control" placeholder="What you looking for?">
+            </div>
+            <div align="center">
+                <span class="counter"></span>
+                </div>
+            <table class="fixed table results" id="table1">
+                <thead>
+                    <tr class="top-row">
+                        <th class="first-col" colspan="2" style="text-align:right">&nbsp</th>
+                        <th class="header">AA</th>
+                        <th class="header">Budgeting</th>
+                        <th class="header">Payroll</th>
+                        <th class="header">Accounts Payable</th>
+                        <th class="header">General Ledger</th>
+                        <th class="header">General Ledger Detail</th>
+                        <th class="header">Quickbooks</th>
+                        <th class="header">Verian Details</th>
+                        <th class="header" >Verian</th>
+                        <th class="header" >Replicon</th>
+                        <th class="header" >Index</th>
+                        <th class="header" >CGIS</th>
+                        <th class="header" >Verian Header</th>
+                    </tr>
+                    <tr class="warning no-result" style="display: none;">
+                        <td align="center" colspan="14">No result.</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="select-col"><td class="select-col" rowspan="4">...</td></tr>
+                    <tr>
+                        <td class="first-col module" align="center">Entity</td>
+                        <td align="center">☑</td>
+                        <td align="center">☑</td>
+                        <td align="center">☑</td>
+                        <td align="center">☑</td>
+                        <td align="center">☑</td>
+                        <td align="center">☑</td>
+                        <td align="center">☑</td>
+                        <td align="center">☑</td>
+                        <td align="center">☑</td>
+                        <td align="center">☑</td>
+                        <td align="center">☑</td>
+                        <td align="center">☑</td>
+                        <td align="center">☑</td>
+                    </tr>
+                    <tr><td class="first-col module" align="center">Period</td>
+                        <td align="center">☑</td>
+                        <td align="center">☑</td>
+                        <td align="center">☑</td>
+                        <td align="center">☑</td>
+                        <td align="center">☑</td>
+                        <td align="center">☑</td>
+                        <td align="center">☑</td>
+                        <td align="center">☑</td>
+                        <td align="center">☑</td>
+                        <td align="center">☑</td>
+                        <td align="center">☑</td>
+                        <td align="center">☑</td>
+                        <td align="center">☑</td>
+                    </tr>
+                    <tr><td class="first-col module" align="center">Scenario</td>
+                        <td align="center">☑</td>
+                        <td align="center">☑</td>
+                        <td align="center">☑</td>
+                        <td align="center">☑</td>
+                        <td align="center">☑</td>
+                        <td align="center">☑</td>
+                        <td align="center">☑</td>
+                        <td align="center">☑</td>
+                        <td align="center">☑</td>
+                        <td align="center">☑</td>
+                        <td align="center">☑</td>
+                        <td align="center">☑</td>
+                        <td align="center">☑</td>
+                    </tr>
+                    <tr class="select-col gl-code"><td class="select-col" rowspan="7">GL</td></tr>
+                    <tr class="gl-code"><td class="first-col module" align="center">Account</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">☑</td>
+                        <td align="center">☑</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                    </tr>
+                    <tr class="gl-code">
+                        <td class="first-col module" align="center">Base Location</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">✓</td>
+                    </tr>
+                    <tr class="gl-code"><td class="first-col module" align="center">Department</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                    </tr>
+                    <tr class="gl-code"><td class="first-col module" align="center">Placeholder</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">✓</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">✓</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                    </tr>
+                    <tr class="gl-code" ><td class="first-col module" align="center">Restriction</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">✓</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">✓</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                    </tr>
+                    <tr class="gl-code"><td class="first-col module" align="center">Account String</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                    </tr>
+                    <tr class="select-col aa-string"><td class="select-col" rowspan="13">AA</td></tr>
+                    <tr class="aa-string"><td class="first-col module" align="center">Funder Type</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">✓</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                    </tr>
+                    <tr class="aa-string"><td class="first-col module" align="center">Funder</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">&nbsp</td>
+                    </tr>
+                    <tr class="aa-string"><td class="first-col module" align="center">Grant In</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">&nbsp</td>
+                    </tr>
+                    <tr class="aa-string"><td class="first-col module" align="center">IA Sub Comp</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">&nbsp</td>
+                    </tr>
+                    <tr class="aa-string"><td class="first-col module" align="center">Amend In</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">✓</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                    </tr>
+                    <tr class="aa-string"><td class="first-col module" align="center">Budget Location</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">&nbsp</td>
+                    </tr>
+                    <tr class="aa-string"><td class="first-col module" align="center">Designation</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">&nbsp</td>
+                    </tr>
+                    <tr class="aa-string"><td class="first-col module" align="center">Activity</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">✓</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                    </tr>
+                    <tr class="aa-string"><td class="first-col module" align="center">Grant Out</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">&nbsp</td>
+                    </tr>
+                    <tr class="aa-string"><td class="first-col module" align="center">OA Sub Comp</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">&nbsp</td>
+                    </tr>
+                    <tr class="aa-string">
+                        <td class="first-col module" align="center">Amend Out</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">&nbsp</td>
+                    </tr>
+                    <tr class="aa-string"><td class="first-col module" align="center">Campaign</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">✓</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                    </tr>
+                    <tr class="select-col"><td class="select-col" rowspan="14">...</td></tr>
+                    <tr><td class="first-col module" align="center">Category</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                    </tr>
+                    <tr><td class="first-col module" align="center">AA String</td>
+                        <td align="center">✓</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                    </tr>
+                    <tr><td class="first-col module" align="center">Index</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                    </tr>
+                    <tr><td class="first-col module" align="center">TBD</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">✓</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">✓</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                    </tr>
+                    <tr><td class="first-col module" align="center">Budget Designation</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                    </tr>
+                    <tr><td class="first-col module" align="center">Vendor</td>
+                        <td align="center">✓</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">☑</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">✓</td>
+                        <td align="center">&nbsp</td>
+                    </tr>
+                    <tr><td class="first-col module" align="center">Employee</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">☑</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">✓</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                    </tr>
+                    <tr><td class="first-col module" align="center">Sequence</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                    </tr>
+                    <tr><td class="first-col module" align="center">Currency</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">✓</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                    </tr>
+                    <tr><td class="first-col module" align="center">Asset</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                    </tr>
+                    <tr><td class="first-col module" align="center">Customer</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                    </tr>
+                    <tr><td class="first-col module" align="center">Product</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                    </tr>
+                    <tr><td class="first-col module" align="center">Project</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                        <td align="center">&nbsp</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+        <script type="text/javascript"charset="utf-8">
+
+            var matched, browser;
+
+            jQuery.uaMatch = function( ua ) {
+                ua = ua.toLowerCase();
+
+                var match = /(chrome)[ \/]([\w.]+)/.exec( ua ) ||
+                    /(webkit)[ \/]([\w.]+)/.exec( ua ) ||
+                    /(opera)(?:.*version|)[ \/]([\w.]+)/.exec( ua ) ||
+                    /(msie)[\s?]([\w.]+)/.exec( ua ) ||       
+                    /(trident)(?:.*? rv:([\w.]+)|)/.exec( ua ) ||
+                    ua.indexOf("compatible") < 0 && /(mozilla)(?:.*? rv:([\w.]+)|)/.exec( ua ) ||
+                    [];
+
+                return {
+                    browser: match[ 1 ] || "",
+                    version: match[ 2 ] || "0"
+                };
+            };
+
+            matched = jQuery.uaMatch( navigator.userAgent );
+            //IE 11+ fix (Trident) 
+            matched.browser = matched.browser == 'trident' ? 'msie' : matched.browser;
+            browser = {};
+
+            if ( matched.browser ) {
+                browser[ matched.browser ] = true;
+                browser.version = matched.version;
+            }
+
+            // Chrome is Webkit, but Webkit is also Safari.
+            if ( browser.chrome ) {
+                browser.webkit = true;
+            } else if ( browser.webkit ) {
+                browser.safari = true;
+            }
+
+            jQuery.browser = browser;
+            // log removed - adds an extra dependency
+            //log(jQuery.browser)
+
+            function updatecols(){
+                
+                l = document.getElementById('table1').rows[0].cells.length
+                for(i = 2; i < l+1; i++){
+                    $('td:nth-child('+ i +'),th:nth-child('+ i +')').show()
+                    if($('td:nth-child('+ i +'):contains("✓"):visible,td:nth-child('+ i +'):contains("☑"):visible').length == 0) {
+                        $('td:nth-child('+ i +'),th:nth-child('+ i +')').hide()
+                    }
+                }
+                updatewidth();
+            }
+
+            function updaterows(){
+                
+                $('tbody>tr').each(function() {
+                    var row = $(this)[0]
+                    if($(this).children().filter(':contains("✓"):visible,:contains("☑"):visible').length == 0){
+                        $(this).hide()
+                    }
+                })
+                updatewidth();
+            }
+            function updatewidth(){
+                var cellwidth = 70
+                var width = $('th:visible').length
+                $('table.table').css('width', 300+(width-1)*cellwidth+'px')
+            }
+            var shifted = false;
+            var ctrl = false;
+            var ctrlcollist = []
+            var ctrllistrow = []
+            $(document).keydown(function(e){
+                shifted = e.shiftKey;
+                if(!ctrl && e.ctrlKey){
+                    ctrl = e.ctrlKey;
+                    ctrlcollist = [];
+                    ctrllistrow = [];
+                    console.log("yo");
+                }
+            
+            } );
+
+            $(document).keyup(function(e){
+                
+                var col;
+                if(ctrl && ctrlcollist.length){
+                    $('td:not(.first-col,.select-col),th:not(.first-col,.select-col)').hide();
+                    for(col in ctrlcollist){
+                        $('td:nth-child('+ ctrlcollist[col] +'),th:nth-child('+ ctrlcollist[col] +')').show();
+                    }
+                    ctrlcollist = []
+                    updatewidth()
+                    updaterows()
+                    $('th.first-col').attr('colspan',0)
+                }
+                
+
+                if(ctrl && ctrllistrow.length){
+                    $('tbody>tr').hide()
+                    $('th.first-col').attr('colspan',0)
+                    for(row in ctrllistrow){
+                        $('#'+ctrllistrow[row]).show()
+                    }
+                    ctrllistrow = []
+                    updatecols()
+                    updatewidth()
+                }
+                ctrl = false;
+                shifted = false;
+            })
+
+            var myTransition = ($.browser.webkit)  ? '-webkit-transition' :
+                       ($.browser.mozilla) ? '-moz-transition' : 
+                       ($.browser.msie)    ? '-ms-transition' :
+                       ($.browser.opera)   ? '-o-transition' : 'transition';
+            function centrecolumn(){
+                var id = $(this).attr('id')
+                //showall()
+                if(ctrl){
+                    ctrlcollist.push(id)
+                    $('td:nth-child('+ id +')').addClass('highlight')
+                } else {
+                    if(!shifted) {
+                        $('td:not(#'+id+',.first-col,.select-col),th:not(#'+id+',.first-col,.select-col)').hide();
+                        //$('td:not(nth-child('+ id +')),th:not(nth-child('+ id +'))').hide();
+                    } else {
+                        $('td:nth-child('+ id +'),th:nth-child('+ id +')').hide();
+                    }
+                    $('th.first-col').attr('colspan',0)
+                    updaterows()
+                }
+                
+            };
+            function highlightcolumn (){
+                //$('td,th').css({'background-color':'#ffffff', myTransition:'background-color .4s'})
+                var id = $(this).attr('id')
+                $('td:nth-child('+ id +')').addClass('highlight')
+                $('th:nth-child('+ id +')').addClass('highlight')
+            };
+            function highlightrow (){
+                var test = $(this)
+                $(this).parent().addClass('highlight')
+                //$(this).parent().children('.first-col').addClass('active-title')
+            };
+            function resetcolors (){
+                $('td,th,tr').removeClass('highlight highlight-title');
+                for(col in ctrlcollist){
+                    $('td:nth-child('+ ctrlcollist[col] +')').addClass('highlight')
+                }
+                for(row in ctrllistrow){
+                    $('#'+ctrllistrow[row]).addClass('highlight')
+                }
+            };
+
+            l = document.getElementById('table1').rows[0].cells.length;
+            for(i = 1; i < l+1; i++){
+                $('th:nth-child('+ i +')').attr("id",i)
+                $('td:nth-child('+ i +')').attr("id",i)
+            };  
+
+            function hideotherrows(){
+                var id = $(this).uniqueId().attr('id')
+                if(ctrl){
+                    ctrllistrow.push(id)
+                    $(this).addClass('highlight')
+                } else {
+                    $('tbody>tr').hide()
+                    $('th.first-col').attr('colspan',0)
+                    $(this).show()
+                    updatecols()
+                }
+            }
+
+            function showall(){
+                $('tbody>tr,td').show()
+
+                $('th.first-col').attr('colspan',2)
+                $('.no-result').hide();
+                $('.search').val("");
+                updatecols()
+                $(".search").val('');
+                $('.counter').text('')
+
+                $('tbody>tr').attr('display','')
+            }
+
+            function selectcategory(){
+                if(ctrl){
+                    var next = $(this).closest('tr').next('tr')
+                    var num = $(this).find('>td').attr('rowspan')
+                    for(i = 1; i < num; i++){
+                        var id = next.uniqueId().attr('id')
+                        ctrllistrow.push(id)
+                        next.addClass('highlight')
+                        next = next.closest('tr').next('tr')
+                    }
+                } else {
+                    $('tbody>tr').hide()
+                    $(this).show()
+                    var next = $(this).closest('tr').next('tr')
+                    var num = $(this).find('>td').attr('rowspan')
+                    for(i = 1; i < num; i++){
+                        next.show()
+                        next = next.closest('tr').next('tr')
+                    }
+                    updatecols()
+                }
+            }
+
+            function highlightcategory(){
+                $(this).addClass('highlight')
+                var next = $(this).closest('tr').next('tr')
+                var num = $(this).find('>td').attr('rowspan')
+                for(i = 1; i < num; i++){
+                    next.addClass('highlight')
+                    next = next.closest('tr').next('tr')
+                }
+                updatecols()
+            }
+
+            $('tr.select-col').hover(highlightcategory,resetcolors)
+
+            $('tr:not(.select-col)>th').hover(highlightcolumn,resetcolors)
+            $('tr:not(.select-col)>td').hover(highlightrow,resetcolors)
+            $('tbody>tr:not(.select-col)').click(hideotherrows)
+            $('tbody>tr.select-col').click(selectcategory)
+            $('thead>tr>th.first-col').click(showall)
+            $('th:not(.first-col)').click(centrecolumn)
+
+        </script>
+        
+        <script>
+                            // d3.text("schema.csv", function(data) {
+                //     var parsedCSV = d3.csv.parseRows(data);
+
+
+                //     var container = d3.select("body")
+                //         .append("table")
+                //         .attr("class", "table table-striped results")
+                //         .attr("id", "table1")
+
+                //     container.append("thead").append("tr")
+                //         .selectAll("th")
+                //         .data(parsedCSV[0])
+                //         .enter().append("th")
+                //         .text(function(d) {
+                //             return d;
+                //         })
+
+                //     container.select("thead").append("tr")
+                //         .attr("class", "warning no-result")
+                //         .append("td").attr("colspan","14")
+                //         .text("No result.")
+
+                                  
+                //     container.append("tbody")
+                //         .selectAll("tr").data(parsedCSV.slice(1))
+                //         .enter().append("tr")
+
+                //         .selectAll("td")
+                //         .data(function(d){return d;})
+                //         .enter().append("td")
+                //         .text(function(d){return d;})
+
+                // });
+            $(document).ready(function() {
+              $(".search").keyup(function () {
+                var searchTerm = $(".search").val();
+            
+                var listItem = $('.results tbody').children('tr');
+                var searchSplit = searchTerm.replace(/ /g, "'):containsi('")
+
+                $.extend($.expr[':'], {'containsi': function(elem, i, match, array){
+                    return (elem.textContent || elem.innerText || '').toLowerCase().indexOf((match[3] || "").toLowerCase()) >= 0;
+                }
+                });
+
+                $(".results tbody tr:not(.select-col)").not(":containsi('" + searchSplit + "')").each(function(e){
+                    $(this).attr('visible','false');
+                });
+
+                $(".results tbody tr:not(.select-col):containsi('" + searchSplit + "')").each(function(e){
+                    $(this).attr('visible','true');
+                });
+
+                var jobCount = $('.results tbody tr[visible="true"]').length;
+                if(jobCount < '34'){
+                    $('.counter').text(jobCount + (jobCount != 1 ? ' items' : ' item' ));
+                } else {
+                    $('.counter').text('')
+                }
+
+                if(jobCount == '0') {$('.no-result').show();$('th.first-col').hide();}
+                else {$('.no-result').hide();$('th.first-col').show()}
+                updatecols()
+                if(searchTerm){
+                    $('tbody>tr.select-col').hide()
+                    $('th.first-col').attr('colspan',0)
+                } else {
+                    $('tbody>tr.select-col').show()
+                    $('th.first-col').attr('colspan',2)
+                    showall()
+                }
+            });
+            $(".search").keydown(function () {
+                if(!$(".search").val()){
+                    showall();
+                    $('.no-result').hide();
+                }
+            });
+          });
+
+        </script>
+        
+    </body>
+</html>
