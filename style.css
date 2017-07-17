@@ -161,3 +161,10 @@ th.header{
     user-select: none;
     cursor: default;
 }
+
+#info{
+    text-align: center;
+    max-width: 500px;
+    margin: auto;
+    margin-top: 50px;
+}
